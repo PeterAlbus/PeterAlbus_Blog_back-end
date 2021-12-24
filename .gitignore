@@ -33,6 +33,5 @@ build/
 .vscode/
 
 /target/
-/sql/
 application.yml
 5963105_www.peteralbus.com.pfx
