@@ -4,10 +4,25 @@ import com.peteralbus.domain.Photo;
 
 import java.util.List;
 
-/*Created on 2021/7/29.*/
-/*@author PeterAlbus*/
+
+/**
+ * The interface Photo service.
+ * @author PeterAlbus
+ */
 public interface PhotoService
 {
+    /**
+     * Query all list.
+     *
+     * @return the list
+     */
     List<Photo> queryAll();
+
+    /**
+     * Add int.
+     *
+     * @param photo the photo
+     * @return the int
+     */
     int add(Photo photo);
 }

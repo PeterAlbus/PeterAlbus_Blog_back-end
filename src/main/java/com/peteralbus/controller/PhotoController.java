@@ -97,4 +97,29 @@ public class PhotoController
             return "error:"+e.getMessage();
         }
     }
+
+    /**
+     * Custom upload string.
+     *
+     * @param file     the file
+     * @param path     the path
+     * @return the string
+     */
+    @PostMapping("/uploadOriginImg")
+    public String uploadOriginImg(@RequestParam("file") MultipartFile file,String path)
+    {
+        /*pathExample:blog/imgs/photo/*/
+        String uploadPath="/home/PeterAlbus/assets/"+path;
+        // 获取上传的文件名称
+        String fileName = file.getOriginalFilename();
+        File dest = new File(uploadPath + fileName);
+        try {
+            // 上传的文件被保存了
+            file.transferTo(dest);
+            return "https://www.peteralbus.com:8440/assets/"+path+fileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error:"+e.getMessage();
+        }
+    }
 }
