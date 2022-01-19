@@ -8,13 +8,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/*Created on 2021/7/29.*/
-/*@author PeterAlbus*/
+/**
+ * The type Photo service.
+ * @author PeterAlbus
+ * Created on 2021/7/29.
+ */
 @Service
 public class PhotoServiceImpl implements PhotoService
 {
-    @Autowired
+    /**
+     * The Photo mapper.
+     */
     PhotoMapper photoMapper;
+
+    @Autowired
+    public void setPhotoMapper(PhotoMapper photoMapper)
+    {
+        this.photoMapper = photoMapper;
+    }
+
     @Override
     public List<Photo> queryAll()
     {

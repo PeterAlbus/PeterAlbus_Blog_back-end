@@ -15,6 +15,7 @@ import java.util.UUID;
 /**
  * The type Photo controller.
  * @author PeterAlbus
+ * Created on 2021/7/29.
  */
 @RestController
 @RequestMapping("/photo")
@@ -24,8 +25,13 @@ public class PhotoController
     /**
      * The Photo service.
      */
-    @Autowired
     PhotoService photoService;
+
+    @Autowired
+    public void setPhotoService(PhotoService photoService)
+    {
+        this.photoService = photoService;
+    }
 
     /**
      * Query all list.
@@ -57,10 +63,10 @@ public class PhotoController
             // 上传的文件被保存了
             file.transferTo(dest);
             Thumbnails.of("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName).size(200, 300).toFile("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
-            System.out.println("上传成功，当前上传的文件保存在"+"https://www.peteralbus.com:8440/assets/blog/imgs/photo/"+fileName);
+            System.out.println("上传成功，当前上传的文件保存在"+"https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName);
             Photo photo=new Photo();
-            photo.setImgSrc("https://www.peteralbus.com:8440/assets/blog/imgs/photo/"+fileName);
-            photo.setImgThumb("https://www.peteralbus.com:8440/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
+            photo.setImgSrc("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName);
+            photo.setImgThumb("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
             photo.setImgName(imgName);
             photoService.add(photo);
             return "success";
@@ -91,7 +97,7 @@ public class PhotoController
             // 上传的文件被保存了
             file.transferTo(dest);
             Thumbnails.of(uploadPath+ saveName).size(300, 300).toFile(uploadPath+ saveName +"_THUMB.jpg");
-            return "https://www.peteralbus.com:8440/assets/"+path+ saveName +"_THUMB.jpg";
+            return "https://file.peteralbus.com/assets/"+path+ saveName +"_THUMB.jpg";
         } catch (IOException e) {
             e.printStackTrace();
             return "error:"+e.getMessage();
@@ -116,7 +122,7 @@ public class PhotoController
         try {
             // 上传的文件被保存了
             file.transferTo(dest);
-            return "https://www.peteralbus.com:8440/assets/"+path+fileName;
+            return "https://file.peteralbus.com/assets/"+path+fileName;
         } catch (IOException e) {
             e.printStackTrace();
             return "error:"+e.getMessage();

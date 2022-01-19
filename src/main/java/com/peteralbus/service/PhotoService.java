@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * The interface Photo service.
  * @author PeterAlbus
+ * Created on 2021/7/29.
  */
 public interface PhotoService
 {

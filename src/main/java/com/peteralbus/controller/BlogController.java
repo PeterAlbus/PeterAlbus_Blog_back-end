@@ -11,41 +11,103 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-/*Created on 2021/7/20.*/
-/*@author PeterAlbus*/
 
+/**
+ * The type Blog controller.
+ * @author PeterAlbus
+ * Created on 2021/7/20.
+ */
 @RestController
 @CrossOrigin
 public class BlogController
 {
-    @Autowired
+    /**
+     * The Blog service.
+     */
     BlogService blogService;
+
+    /**
+     * Sets blog service.
+     *
+     * @param blogService the blog service
+     */
+    @Autowired
+    public void setBlogService(BlogService blogService)
+    {
+        this.blogService = blogService;
+    }
+
+    /**
+     * Query all list.
+     *
+     * @return the list
+     */
     @GetMapping("/queryAll")
     public List<Blog> queryAll()
     {
         return blogService.queryAll();
     }
+
+    /**
+     * Query by id blog.
+     *
+     * @param id the id
+     * @return the blog
+     */
     @GetMapping("/queryById")
     public Blog queryById(Integer id)
     {
         return blogService.queryById(id);
     }
+
+    /**
+     * Add string.
+     *
+     * @param blog the blog
+     * @return the string
+     */
     @PostMapping("/add")
     public String add(Blog blog)
     {
         int status=-1;
         status=blogService.add(blog);
-        if(status>0) return blog.toString();
-        else return "fail";
+        if(status>0)
+        {
+            return blog.toString();
+        }
+        else
+        {
+            return "fail";
+        }
     }
+
+    /**
+     * Update string.
+     *
+     * @param blog the blog
+     * @return the string
+     */
     @PostMapping("/update")
     public String update(Blog blog)
     {
         int status=-1;
         status=blogService.update(blog);
-        if(status>0) return blog.toString();
-        else return "fail";
+        if(status>0)
+        {
+            return blog.toString();
+        }
+        else
+        {
+            return "fail";
+        }
     }
+
+    /**
+     * Upload string.
+     *
+     * @param file the file
+     * @return the string
+     */
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file)
     {
@@ -61,9 +123,7 @@ public class BlogController
             System.out.println("上传成功，当前上传的文件保存在"+"https://www.peteralbus.com:8440/assets/blog/imgs/cover/"+newName);
             return "https://www.peteralbus.com:8440/assets/blog/imgs/cover/"+newName;
         } catch (IOException e) {
-            //log.error(e.toString());
+            return "上传错误:"+e.getMessage();
         }
-        // 待完成 —— 文件类型校验工作
-        return "上传错误";
     }
 }

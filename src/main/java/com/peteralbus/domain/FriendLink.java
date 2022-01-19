@@ -7,33 +7,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.Serializable;
 /**
- * The type Photo.
+ * The type Friend link.
  * @author PeterAlbus
- * Created on 2021/7/29.
+ * Created on 2022/1/19.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Photo implements Serializable
+public class FriendLink
 {
     /**
-     * The Img id.
+     * The Link id.
      */
     @TableId(type= IdType.ASSIGN_ID)
-    Long imgId;
+    Long linkId;
     /**
-     * The Img name.
+     * The Link name.
      */
-    String imgName;
+    String linkName;
     /**
-     * The Img src.
+     * The Link url.
      */
-    String imgSrc;
-    /**
-     * The Img thumb.
-     */
-    String imgThumb;
+    String linkUrl;
 }

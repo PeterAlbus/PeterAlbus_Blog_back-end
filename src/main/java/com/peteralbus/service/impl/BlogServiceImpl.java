@@ -9,13 +9,28 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.List;
 
-/*Created on 2021/7/21.*/
-/*@author PeterAlbus*/
+/**
+ * The type Blog service.
+ * @author PeterAlbus
+ * Created on 2021/7/21.
+ */
 @Service
 public class BlogServiceImpl implements BlogService
 {
-    @Autowired
+
     private BlogMapper blogMapper;
+
+    /**
+     * Sets blog mapper.
+     *
+     * @param blogMapper the blog mapper
+     */
+    @Autowired
+    public void setBlogMapper(BlogMapper blogMapper)
+    {
+        this.blogMapper = blogMapper;
+    }
+
     @Override
     public List<Blog> queryAll()
     {
