@@ -9,8 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The type Photo controller.
@@ -54,27 +53,47 @@ public class PhotoController
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file,String imgName)
     {
-        System.out.println("fileUpload");
         String uploadPath="/home/PeterAlbus/assets/blog/imgs/photo/";
-        // 获取上传的文件名称
         String fileName = file.getOriginalFilename();
-        File dest = new File(uploadPath + fileName);
-        try {
-            // 上传的文件被保存了
-            file.transferTo(dest);
-            Thumbnails.of("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName).size(200, 300).toFile("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
-            System.out.println("上传成功，当前上传的文件保存在"+"https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName);
-            Photo photo=new Photo();
-            photo.setImgSrc("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName);
-            photo.setImgThumb("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
-            photo.setImgName(imgName);
-            photoService.add(photo);
-            return "success";
-        } catch (IOException e) {
-            //log.error(e.toString());
+        String type="unknown";
+        final Set<String> allowTypes = new HashSet<String>(){{
+            add(".jpg");
+            add(".jpeg");
+            add(".png");
+            add(".JPG");
+            add(".JPEG");
+            add(".PNG");
+            add(".webp");
+            add(".WEBP");
+            add(".tif");
+            add(".TIF");
+            add(".bmp");
+            add(".gif");
+            add(".BMP");
+            add(".GIF");
+        }};
+        if(fileName!=null)
+        {
+            type=fileName.substring(fileName.lastIndexOf('.'));
         }
-        // 待完成 —— 文件类型校验工作
-        return "fail";
+        if(allowTypes.contains(type))
+        {
+            File dest = new File(uploadPath + fileName);
+            try {
+                // 上传的文件被保存了
+                file.transferTo(dest);
+                Thumbnails.of("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName).size(200, 300).toFile("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
+                Photo photo=new Photo();
+                photo.setImgSrc("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName);
+                photo.setImgThumb("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
+                photo.setImgName(imgName);
+                photoService.add(photo);
+                return "success";
+            } catch (IOException e) {
+                return "上传错误:"+e.getMessage();
+            }
+        }
+        return "typeError";
     }
 
     /**
@@ -90,18 +109,47 @@ public class PhotoController
     {
         /*pathExample:blog/imgs/photo/*/
         String uploadPath="/home/PeterAlbus/assets/"+path;
-        // 获取上传的文件名称
-        saveName=saveName+".jpg";
-        File dest = new File(uploadPath + saveName);
-        try {
-            // 上传的文件被保存了
-            file.transferTo(dest);
-            Thumbnails.of(uploadPath+ saveName).size(300, 300).toFile(uploadPath+ saveName +"_THUMB.jpg");
-            return "https://file.peteralbus.com/assets/"+path+ saveName +"_THUMB.jpg";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "error:"+e.getMessage();
+        String fileName=file.getOriginalFilename();
+        String type="unknown";
+        final Set<String> allowTypes = new HashSet<String>(){{
+            add(".jpg");
+            add(".jpeg");
+            add(".png");
+            add(".JPG");
+            add(".JPEG");
+            add(".PNG");
+            add(".tif");
+            add(".TIF");
+            add(".bmp");
+            add(".BMP");
+            add(".gif");
+            add(".GIF");
+        }};
+        if(fileName!=null)
+        {
+            type=fileName.substring(fileName.lastIndexOf('.'));
         }
+        if(allowTypes.contains(type))
+        {
+            if(!"".equals(saveName))
+            {
+                saveName=saveName+type;
+            }
+            else
+            {
+                saveName=fileName;
+            }
+            File dest = new File(uploadPath + saveName);
+            try {
+                file.transferTo(dest);
+                Thumbnails.of(uploadPath+ saveName).size(300, 300).toFile(uploadPath+ saveName +"_THUMB.jpg");
+                return "https://file.peteralbus.com/assets/"+path+ saveName +"_THUMB.jpg";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "error:"+e.getMessage();
+            }
+        }
+        return "typeError";
     }
 
     /**
@@ -116,16 +164,32 @@ public class PhotoController
     {
         /*pathExample:blog/imgs/photo/*/
         String uploadPath="/home/PeterAlbus/assets/"+path;
-        // 获取上传的文件名称
         String fileName = file.getOriginalFilename();
-        File dest = new File(uploadPath + fileName);
-        try {
-            // 上传的文件被保存了
-            file.transferTo(dest);
-            return "https://file.peteralbus.com/assets/"+path+fileName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "error:"+e.getMessage();
+        String type="unknown";
+        final Set<String> allowTypes = new HashSet<String>(){{
+            add(".jpg");
+            add(".jpeg");
+            add(".png");
+            add(".JPG");
+            add(".JPEG");
+            add(".PNG");
+        }};
+        if(fileName!=null)
+        {
+            type=fileName.substring(fileName.lastIndexOf('.'));
         }
+        if(allowTypes.contains(type))
+        {
+            File dest = new File(uploadPath + fileName);
+            try {
+                // 上传的文件被保存了
+                file.transferTo(dest);
+                return "https://file.peteralbus.com/assets/"+path+fileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "error:"+e.getMessage();
+            }
+        }
+        return "typeError";
     }
 }

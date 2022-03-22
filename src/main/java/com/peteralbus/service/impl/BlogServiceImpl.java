@@ -38,7 +38,7 @@ public class BlogServiceImpl implements BlogService
     }
 
     @Override
-    public Blog queryById(Integer id)
+    public Blog queryById(Long id)
     {
         return blogMapper.selectById(id);
     }

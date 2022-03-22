@@ -8,7 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -55,7 +57,7 @@ public class BlogController
      * @return the blog
      */
     @GetMapping("/queryById")
-    public Blog queryById(Integer id)
+    public Blog queryById(Long id)
     {
         return blogService.queryById(id);
     }
@@ -69,7 +71,7 @@ public class BlogController
     @PostMapping("/add")
     public String add(Blog blog)
     {
-        int status=-1;
+        int status;
         status=blogService.add(blog);
         if(status>0)
         {
@@ -90,7 +92,7 @@ public class BlogController
     @PostMapping("/update")
     public String update(Blog blog)
     {
-        int status=-1;
+        int status;
         status=blogService.update(blog);
         if(status>0)
         {
@@ -111,19 +113,36 @@ public class BlogController
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file)
     {
-        System.out.println("fileUpload");
         String uploadPath="/home/PeterAlbus/assets/blog/imgs/cover/";
-        // 获取上传的文件名称
         String fileName = file.getOriginalFilename();
-        String newName= UUID.randomUUID().toString().replace("-", "").toLowerCase();
-        File dest = new File(uploadPath + newName);
-        try {
-            // 上传的文件被保存了
-            file.transferTo(dest);
-            System.out.println("上传成功，当前上传的文件保存在"+"https://www.peteralbus.com:8440/assets/blog/imgs/cover/"+newName);
-            return "https://www.peteralbus.com:8440/assets/blog/imgs/cover/"+newName;
-        } catch (IOException e) {
-            return "上传错误:"+e.getMessage();
+        String type="unknown";
+        final Set<String> allowTypes = new HashSet<String>(){{
+            add(".jpg");
+            add(".jpeg");
+            add(".png");
+            add(".JPG");
+            add(".JPEG");
+            add(".PNG");
+            add(".webp");
+            add(".tif");
+            add(".WEBP");
+            add(".TIF");
+        }};
+        if(fileName!=null)
+        {
+            type=fileName.substring(fileName.lastIndexOf('.'));
         }
+        if(allowTypes.contains(type))
+        {
+            String newName= UUID.randomUUID().toString().replace("-", "").toLowerCase()+type;
+            File dest = new File(uploadPath + newName);
+            try {
+                file.transferTo(dest);
+                return "https://file.peteralbus.com/assets/blog/imgs/cover/"+newName;
+            } catch (IOException e) {
+                return "上传错误:"+e.getMessage();
+            }
+        }
+        return "typeError";
     }
 }

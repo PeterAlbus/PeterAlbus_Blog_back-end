@@ -15,7 +15,7 @@ import java.util.List;
  * Created on 2022/1/19.
  */
 @RestController
-@CrossOrigin(origins = {"http://peteralbus.com","https://peteralbus.com","localhost"})
+@CrossOrigin(origins = {"http://www.peteralbus.com","https://www.peteralbus.com","http://localhost","http://peteralbus.com","https://peteralbus.com"})
 @RequestMapping("/friendLink")
 public class FriendLinkController
 {

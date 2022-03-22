@@ -25,7 +25,7 @@ public interface BlogService
      * @param id the id
      * @return the blog
      */
-    Blog queryById(Integer id);
+    Blog queryById(Long id);
 
     /**
      * Add int.
