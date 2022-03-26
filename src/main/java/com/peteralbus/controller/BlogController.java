@@ -1,7 +1,10 @@
 package com.peteralbus.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.peteralbus.domain.Blog;
 import com.peteralbus.service.BlogService;
+import com.peteralbus.util.RedisUtils;
+import com.peteralbus.util.TypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,12 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 /**
  * The type Blog controller.
- * @author PeterAlbus
- * Created on 2021/7/20.
+ *
+ * @author PeterAlbus  Created on 2021/7/20.
  */
 @RestController
 @CrossOrigin
@@ -27,6 +31,21 @@ public class BlogController
      * The Blog service.
      */
     BlogService blogService;
+    /**
+     * The Redis utils.
+     */
+    RedisUtils redisUtils;
+
+    /**
+     * Sets redis utils.
+     *
+     * @param redisUtils the redis utils
+     */
+    @Autowired
+    public void setRedisUtils(RedisUtils redisUtils)
+    {
+        this.redisUtils = redisUtils;
+    }
 
     /**
      * Sets blog service.
@@ -71,6 +90,11 @@ public class BlogController
     @PostMapping("/add")
     public String add(Blog blog)
     {
+        final String writeArticle="write-article";
+        if(!StpUtil.hasPermission(writeArticle))
+        {
+            return "noPermission";
+        }
         int status;
         status=blogService.add(blog);
         if(status>0)
@@ -92,6 +116,11 @@ public class BlogController
     @PostMapping("/update")
     public String update(Blog blog)
     {
+        final String modifyArticle="modify-article";
+        if(!StpUtil.hasPermission(modifyArticle))
+        {
+            return "noPermission";
+        }
         int status;
         status=blogService.update(blog);
         if(status>0)
@@ -102,6 +131,28 @@ public class BlogController
         {
             return "fail";
         }
+    }
+
+    /**
+     * Visit blog string.
+     *
+     * @param blogId    the blog id
+     * @param ipAddress the ip address
+     * @return the string
+     */
+    @GetMapping("/visitBlog")
+    public String visitBlog(Long blogId,String ipAddress)
+    {
+        String key="blogVisitRecord:"+blogId.toString()+"-"+ipAddress;
+        if(redisUtils.exists(key))
+        {
+            return "repeatVisit";
+        }
+        Blog blog=blogService.queryById(blogId);
+        blog.setBlogViews(blog.getBlogViews()+1);
+        blogService.update(blog);
+        redisUtils.set(key, "visited", 8L,TimeUnit.HOURS);
+        return "success";
     }
 
     /**
@@ -116,23 +167,11 @@ public class BlogController
         String uploadPath="/home/PeterAlbus/assets/blog/imgs/cover/";
         String fileName = file.getOriginalFilename();
         String type="unknown";
-        final Set<String> allowTypes = new HashSet<String>(){{
-            add(".jpg");
-            add(".jpeg");
-            add(".png");
-            add(".JPG");
-            add(".JPEG");
-            add(".PNG");
-            add(".webp");
-            add(".tif");
-            add(".WEBP");
-            add(".TIF");
-        }};
         if(fileName!=null)
         {
             type=fileName.substring(fileName.lastIndexOf('.'));
         }
-        if(allowTypes.contains(type))
+        if(TypeUtil.isImg(type))
         {
             String newName= UUID.randomUUID().toString().replace("-", "").toLowerCase()+type;
             File dest = new File(uploadPath + newName);

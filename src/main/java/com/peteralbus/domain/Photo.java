@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+
 /**
  * The type Photo.
  * @author PeterAlbus
