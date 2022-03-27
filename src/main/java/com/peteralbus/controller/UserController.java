@@ -51,9 +51,21 @@ public class UserController
     }
 
     @RequestMapping("/mailLogin")
-    public SaTokenInfo doLogin(String userMail, String userPassword)
+    public SaTokenInfo mailLogin(String userMail, String userPassword)
     {
         User user=userService.authByMail(userMail, userPassword);
+        if(user!=null)
+        {
+            StpUtil.login(user.getUserId());
+            return StpUtil.getTokenInfo();
+        }
+        return null;
+    }
+
+    @RequestMapping("/phoneLogin")
+    public SaTokenInfo phoneLogin(String userPhone, String userPassword)
+    {
+        User user=userService.authByPhone(userPhone, userPassword);
         if(user!=null)
         {
             StpUtil.login(user.getUserId());
@@ -86,6 +98,14 @@ public class UserController
     @RequestMapping("/applyMailVerifyCode")
     public String applyMailVerifyCode(String account)
     {
+        if(redisUtils.exists("verifyCode:"+account))
+        {
+            return "haveVerifyCode";
+        }
+        if(userService.haveAccount(account))
+        {
+            return "haveAccount";
+        }
         String verifyCode=RandomUtil.generateVerifyCode(6);
         try {
             MimeMessage message=javaMailSender.createMimeMessage();
@@ -106,6 +126,14 @@ public class UserController
     @RequestMapping("/applyPhoneVerifyCode")
     public String applyPhoneVerifyCode(String account)
     {
+        if(redisUtils.exists("verifyCode:"+account))
+        {
+            return "haveVerifyCode";
+        }
+        if(userService.haveAccount(account))
+        {
+            return "haveAccount";
+        }
         final String success ="smsSendSuccess";
         String result="";
         String verifyCode=RandomUtil.generateVerifyCode(4);
@@ -115,7 +143,7 @@ public class UserController
             if(Objects.equals(result, success))
             {
                 redisUtils.set("verifyCode:"+account,verifyCode,10L, TimeUnit.MINUTES);
-                return "sendMailSuccess";
+                return "sendSmsSuccess";
             }
         }
         catch (ClientException e)

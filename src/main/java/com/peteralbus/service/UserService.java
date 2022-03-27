@@ -61,4 +61,11 @@ public interface UserService
      */
     int changePassword(Long userId,String oldPassword,String newPassword);
 
+    /**
+     * Have account boolean.
+     *
+     * @param account the account
+     * @return the boolean
+     */
+    boolean haveAccount(String account);
 }

@@ -105,4 +105,12 @@ public class UserServiceImpl implements UserService
         }
         return -1;
     }
+
+    @Override
+    public boolean haveAccount(String account)
+    {
+        QueryWrapper<User> userQueryWrapper=new QueryWrapper<>();
+        userQueryWrapper.eq("user_mail",account).or().eq("user_phone",account);
+        return userMapper.selectCount(userQueryWrapper) > 0;
+    }
 }
