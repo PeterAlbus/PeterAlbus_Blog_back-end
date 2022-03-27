@@ -1,0 +1,54 @@
+package com.peteralbus.util;
+
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.profile.DefaultProfile;
+import com.aliyuncs.profile.IClientProfile;
+
+/**
+ * The type Sms util.
+ * @author PeterAlbus
+ * Created on 2022/3/27.
+ */
+public class SmsUtil
+{
+    private static final String PRODUCT = "Dysmsapi";
+
+    private static final String DOMAIN = "dysmsapi.aliyuncs.com";
+
+    private static final String ACCESS_KEY_ID = "your access key id";
+    private static final String ACCESS_KEY_SECRET = "your access key secret";
+    private static final String OK = "OK";
+    /**
+     * Send sms int.
+     *
+     * @return the int
+     */
+    public static String sendSms(String phone,String code) throws ClientException
+    {
+        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
+        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
+
+        IClientProfile profile = DefaultProfile.getProfile("cn-shanghai", ACCESS_KEY_ID, ACCESS_KEY_SECRET);
+        DefaultProfile.addEndpoint("cn-shanghai", PRODUCT, DOMAIN);
+        IAcsClient acsClient = new DefaultAcsClient(profile);
+
+        SendSmsRequest request = new SendSmsRequest();
+        request.setPhoneNumbers(phone);
+        /* 必填:短信签名-可在短信控制台中找到 */
+        request.setSignName("阿里云短信测试");
+        /* 必填:短信模板code-可在短信控制台中找到 */
+        request.setTemplateCode("SMS_154950909");
+        request.setTemplateParam("{\"code\":\"" + code + "\"}");
+
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        if(sendSmsResponse.getCode()!= null && sendSmsResponse.getCode().equals(OK)){
+            return "smsSendSuccess";
+        }else {
+            return sendSmsResponse.getMessage();
+        }
+    }
+}

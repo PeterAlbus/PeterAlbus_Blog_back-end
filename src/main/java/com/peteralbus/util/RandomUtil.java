@@ -7,7 +7,7 @@ import java.util.Random;
  * @author PeterAlbus
  * Created on 2022/3/26.
  */
-public class Md5Util
+public class RandomUtil
 {
     /**
      * Get salt string.
@@ -25,4 +25,15 @@ public class Md5Util
         }
         return sb.toString();
     }
+
+    public static String generateVerifyCode(int n){
+        Random r = new Random();
+        StringBuilder stringBuffer =new StringBuilder();
+        for(int i = 0;i < n;i ++){
+            int ran1 = r.nextInt(10);
+            stringBuffer.append(ran1);
+        }
+        return stringBuffer.toString();
+    }
+
 }

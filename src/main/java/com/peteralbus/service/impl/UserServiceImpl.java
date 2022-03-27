@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.peteralbus.domain.User;
 import com.peteralbus.mapper.UserMapper;
 import com.peteralbus.service.UserService;
-import com.peteralbus.util.Md5Util;
+import com.peteralbus.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService
     public String register(User user)
     {
         user.setGmtCreate(LocalDateTime.now());
-        user.setUserSalt(Md5Util.getSalt(8));
+        user.setUserIdentity(5);
+        user.setUserSalt(RandomUtil.getSalt(8));
         user.setUserPassword(SaSecureUtil.md5BySalt(user.getUserPassword(), user.getUserSalt()));
         try
         {
@@ -47,7 +48,6 @@ public class UserServiceImpl implements UserService
         {
             Throwable cause = e.getCause();
             if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String sqlState = ((SQLIntegrityConstraintViolationException) cause).getSQLState();
                 return "repeatAccount";
             } else {
                 e.printStackTrace();
