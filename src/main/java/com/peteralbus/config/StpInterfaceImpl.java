@@ -39,6 +39,10 @@ public class StpInterfaceImpl implements StpInterface
             list.add("write-article");
             list.add("modify-article");
         }
+        if(user.getUserIdentity()<=1)
+        {
+            list.add("delete-comment");
+        }
         if(user.getUserIdentity()<=5)
         {
             list.add("comment");
@@ -56,7 +60,7 @@ public class StpInterfaceImpl implements StpInterface
         List<String> list = new ArrayList<String>();
         if(user.getUserIdentity()==0)
         {
-            list.add("admin");
+            list.add("owner");
         }
         if(user.getUserIdentity()==5)
         {

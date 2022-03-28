@@ -2,6 +2,7 @@ package com.peteralbus.controller;
 
 import com.peteralbus.domain.Photo;
 import com.peteralbus.service.PhotoService;
+import com.peteralbus.util.TypeUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -55,30 +56,11 @@ public class PhotoController
     {
         String uploadPath="/home/PeterAlbus/assets/blog/imgs/photo/";
         String fileName = file.getOriginalFilename();
-        String type="unknown";
-        final Set<String> allowTypes = new HashSet<String>(){{
-            add(".jpg");
-            add(".jpeg");
-            add(".png");
-            add(".JPG");
-            add(".JPEG");
-            add(".PNG");
-            add(".webp");
-            add(".WEBP");
-            add(".tif");
-            add(".TIF");
-            add(".bmp");
-            add(".gif");
-            add(".BMP");
-            add(".GIF");
-        }};
-        if(fileName!=null)
+        String type=TypeUtil.getType(fileName);
+        String newName=UUID.randomUUID().toString().replace("-", "").toLowerCase()+type;
+        if(TypeUtil.isImg(type))
         {
-            type=fileName.substring(fileName.lastIndexOf('.'));
-        }
-        if(allowTypes.contains(type))
-        {
-            File dest = new File(uploadPath + fileName);
+            File dest = new File(uploadPath + newName);
             try {
                 // 上传的文件被保存了
                 file.transferTo(dest);
@@ -110,26 +92,8 @@ public class PhotoController
         /*pathExample:blog/imgs/photo/*/
         String uploadPath="/home/PeterAlbus/assets/"+path;
         String fileName=file.getOriginalFilename();
-        String type="unknown";
-        final Set<String> allowTypes = new HashSet<String>(){{
-            add(".jpg");
-            add(".jpeg");
-            add(".png");
-            add(".JPG");
-            add(".JPEG");
-            add(".PNG");
-            add(".tif");
-            add(".TIF");
-            add(".bmp");
-            add(".BMP");
-            add(".gif");
-            add(".GIF");
-        }};
-        if(fileName!=null)
-        {
-            type=fileName.substring(fileName.lastIndexOf('.'));
-        }
-        if(allowTypes.contains(type))
+        String type=TypeUtil.getType(fileName);
+        if(TypeUtil.isImg(type))
         {
             if(!"".equals(saveName))
             {
@@ -165,20 +129,8 @@ public class PhotoController
         /*pathExample:blog/imgs/photo/*/
         String uploadPath="/home/PeterAlbus/assets/"+path;
         String fileName = file.getOriginalFilename();
-        String type="unknown";
-        final Set<String> allowTypes = new HashSet<String>(){{
-            add(".jpg");
-            add(".jpeg");
-            add(".png");
-            add(".JPG");
-            add(".JPEG");
-            add(".PNG");
-        }};
-        if(fileName!=null)
-        {
-            type=fileName.substring(fileName.lastIndexOf('.'));
-        }
-        if(allowTypes.contains(type))
+        String type=TypeUtil.getType(fileName);
+        if(TypeUtil.isImg(type))
         {
             File dest = new File(uploadPath + fileName);
             try {

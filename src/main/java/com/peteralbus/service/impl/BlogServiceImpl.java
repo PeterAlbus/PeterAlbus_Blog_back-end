@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -47,12 +48,14 @@ public class BlogServiceImpl implements BlogService
     public int add(Blog blog)
     {
         blog.setBlogTime(new Date(System.currentTimeMillis()));
+        blog.setGmtModified(LocalDateTime.now());
         return blogMapper.insert(blog);
     }
 
     @Override
     public int update(Blog blog)
     {
+        blog.setGmtModified(LocalDateTime.now());
         return blogMapper.updateById(blog);
     }
 }

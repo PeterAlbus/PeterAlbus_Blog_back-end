@@ -8,15 +8,18 @@ import com.peteralbus.service.UserService;
 import com.peteralbus.util.RandomUtil;
 import com.peteralbus.util.RedisUtils;
 import com.peteralbus.util.SmsUtil;
+import com.peteralbus.util.TypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -184,6 +187,10 @@ public class UserController
     @RequestMapping("/changePassword")
     public String changePassword(Long userId,String oldPassword,String newPassword)
     {
+        if(!Long.valueOf((String) StpUtil.getLoginId()).equals(userId))
+        {
+            return "noPermission";
+        }
         int result=userService.changePassword(userId,oldPassword,newPassword);
         if(result==-1)
         {
@@ -195,5 +202,137 @@ public class UserController
         }
         StpUtil.logout(userId);
         return "success";
+    }
+
+    @RequestMapping("/setPhone")
+    public String setPhone(Long userId,String userPhone,String verifyCode)
+    {
+        if(!Long.valueOf((String) StpUtil.getLoginId()).equals(userId))
+        {
+            return "noPermission";
+        }
+        User user=userService.getUserById(userId);
+        if(user==null)
+        {
+            return "wrongUserId";
+        }
+        String verifyCodeKey="verifyCode:"+userPhone;
+        if(redisUtils.exists(verifyCodeKey))
+        {
+            if(redisUtils.get(verifyCodeKey).equals(verifyCode))
+            {
+                user.setUserPhone(userPhone);
+                if(userService.updateUser(user)>0)
+                {
+                    redisUtils.remove(verifyCodeKey);
+                    return "success";
+                }
+                return "fail";
+            }
+            return "wrongVerifyCode";
+        }
+        return "needRequestVerifyCode";
+    }
+
+    @RequestMapping("/setMail")
+    public String setMail(Long userId,String userMail,String verifyCode)
+    {
+        if(!Long.valueOf((String) StpUtil.getLoginId()).equals(userId))
+        {
+            return "noPermission";
+        }
+        User user=userService.getUserById(userId);
+        if(user==null)
+        {
+            return "wrongUserId";
+        }
+        String verifyCodeKey="verifyCode:"+userMail;
+        if(redisUtils.exists(verifyCodeKey))
+        {
+            if(redisUtils.get(verifyCodeKey).equals(verifyCode))
+            {
+                user.setUserMail(userMail);
+                if(userService.updateUser(user)>0)
+                {
+                    redisUtils.remove(verifyCodeKey);
+                    return "success";
+                }
+                return "fail";
+            }
+            return "wrongVerifyCode";
+        }
+        return "needRequestVerifyCode";
+    }
+
+    @PostMapping("/uploadAvatar")
+    public String upload(@RequestParam("file") MultipartFile file,Long userId)
+    {
+        if(!Long.valueOf((String) StpUtil.getLoginId()).equals(userId))
+        {
+            return "noPermission";
+        }
+        String uploadPath="/home/PeterAlbus/assets/blog/imgs/avatar/";
+        String fileName = file.getOriginalFilename();
+        String type=TypeUtil.getType(fileName);
+        User user=userService.getUserById(userId);
+        if(user==null)
+        {
+            return "wrongUserId";
+        }
+        String newName;
+        if(user.getUserPhone()!=null)
+        {
+            newName="avatar_"+user.getUserPhone()+"_"+UUID.randomUUID().toString().replace("-", "").toLowerCase();
+        }
+        else
+        {
+            newName="avatar_"+user.getUserMail()+"_"+UUID.randomUUID().toString().replace("-", "").toLowerCase();
+        }
+        if(TypeUtil.isImg(type))
+        {
+            newName = newName +type;
+            File dest = new File(uploadPath + newName);
+            try {
+                file.transferTo(dest);
+                user.setUserAvatar("https://file.peteralbus.com/assets/blog/imgs/avatar/"+newName);
+                userService.updateUser(user);
+                return "https://file.peteralbus.com/assets/blog/imgs/avatar/"+newName;
+            } catch (IOException e) {
+                return "上传错误:"+e.getMessage();
+            }
+        }
+        return "typeError";
+    }
+
+    @RequestMapping("/changeUsername")
+    public String changeUsername(Long userId,String username)
+    {
+        if(!Long.valueOf((String) StpUtil.getLoginId()).equals(userId))
+        {
+            return "noPermission";
+        }
+        User user=userService.getUserById(userId);
+        if(user==null)
+        {
+            return "wrongUserId";
+        }
+        user.setUserUsername(username);
+        int result=userService.updateUser(user);
+        if(result>0)
+        {
+            return "success";
+        }
+        return "fail";
+    }
+
+    @RequestMapping("/getUserById")
+    public User getUserById(Long userId)
+    {
+        User user=userService.getUserById(userId);
+        user.setUserPhone(null);
+        user.setUserPassword(null);
+        user.setUserMail(null);
+        user.setUserSalt(null);
+        return user;
     }
 }

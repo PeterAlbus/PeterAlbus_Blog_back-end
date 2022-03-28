@@ -21,10 +21,23 @@ public class TypeUtil
             add(".JPEG");
             add(".PNG");
             add(".webp");
-            add(".tif");
             add(".WEBP");
+            add(".tif");
             add(".TIF");
+            add(".bmp");
+            add(".gif");
+            add(".BMP");
+            add(".GIF");
         }};
         return allowTypes.contains(type);
+    }
+
+    static public String getType(String fileName)
+    {
+        if(fileName!=null)
+        {
+            return fileName.substring(fileName.lastIndexOf('.'));
+        }
+        return "unknown";
     }
 }

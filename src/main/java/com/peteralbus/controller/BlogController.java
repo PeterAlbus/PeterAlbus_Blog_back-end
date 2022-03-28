@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * The type Blog controller.
  *
- * @author PeterAlbus  Created on 2021/7/20.
+ * @author PeterAlbus
+ * Created on 2021/7/20.
  */
 @RestController
 @CrossOrigin
@@ -166,11 +167,7 @@ public class BlogController
     {
         String uploadPath="/home/PeterAlbus/assets/blog/imgs/cover/";
         String fileName = file.getOriginalFilename();
-        String type="unknown";
-        if(fileName!=null)
-        {
-            type=fileName.substring(fileName.lastIndexOf('.'));
-        }
+        String type=TypeUtil.getType(fileName);
         if(TypeUtil.isImg(type))
         {
             String newName= UUID.randomUUID().toString().replace("-", "").toLowerCase()+type;

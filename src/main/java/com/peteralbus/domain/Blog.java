@@ -7,12 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 /**
  * The type Blog.
+ *
  * @author PeterAlbus
  * Created on 2021/7/21.
  */
@@ -68,4 +71,11 @@ public class Blog implements Serializable
      * The Is top.
      */
     Integer isTop;
+
+    /**
+     * The Gmt modified.
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    LocalDateTime gmtModified;
 }
