@@ -1,5 +1,6 @@
 package com.peteralbus.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.peteralbus.domain.Blog;
 import com.peteralbus.mapper.BlogMapper;
 import com.peteralbus.service.BlogService;
@@ -35,7 +36,9 @@ public class BlogServiceImpl implements BlogService
     @Override
     public List<Blog> queryAll()
     {
-        return blogMapper.selectList(null);
+        QueryWrapper<Blog> queryWrapper=new QueryWrapper<>();
+        queryWrapper.ne("blog_hide",true);
+        return blogMapper.selectList(queryWrapper);
     }
 
     @Override

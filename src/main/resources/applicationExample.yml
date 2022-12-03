@@ -19,6 +19,21 @@ spring:
     host: redis-host
     port: 6378
     password: yourPassword
+    database: 0
+  mail:
+    host: smtp.163.com
+    port:
+    username: emailAddress
+    password: EmailPassword
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*Mapper.xml

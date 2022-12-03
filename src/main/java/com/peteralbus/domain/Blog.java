@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 /**
  * The type Blog.
  *
- * @author PeterAlbus
- * Created on 2021/7/21.
+ * @author PeterAlbus  Created on 2021/7/21.
  */
 @Data
 @AllArgsConstructor
@@ -71,6 +70,10 @@ public class Blog implements Serializable
      * The Is top.
      */
     Integer isTop;
+    /**
+     * The Blog hide.
+     */
+    Boolean blogHide;
 
     /**
      * The Gmt modified.

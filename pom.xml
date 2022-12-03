@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.peteralbus</groupId>
-    <artifactId>blog_back</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>blog_back</name>
+    <artifactId>blog</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <name>blog</name>
     <description>Spring Boot PeterAlbus's blog back-end</description>
     <properties>
         <java.version>1.8</java.version>

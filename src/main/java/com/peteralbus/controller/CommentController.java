@@ -2,6 +2,7 @@ package com.peteralbus.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.peteralbus.domain.Comment;
+import com.peteralbus.domain.User;
 import com.peteralbus.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequestMapping("/comment")
 public class CommentController
 {
+    static final String COMMENT="comment";
     CommentService commentService;
 
     @Autowired
@@ -57,7 +59,7 @@ public class CommentController
     @RequestMapping("/addComment")
     public String addComment(Comment comment)
     {
-        if(!StpUtil.isLogin())
+        if(!StpUtil.hasPermission(COMMENT))
         {
             return "notLogin";
         }
@@ -93,7 +95,12 @@ public class CommentController
     public String deleteComment(Comment comment)
     {
         final String deleteComment="delete-comment";
-        if((!Long.valueOf((String) StpUtil.getLoginId()).equals(comment.getCommentUserId()))||StpUtil.hasPermission(deleteComment))
+        Long ownerId=1507660309008289794L;
+        if(comment.getCommentUserId().equals(ownerId)&&!Long.valueOf((String) StpUtil.getLoginId()).equals(ownerId))
+        {
+            return "noPermission";
+        }
+        if((!Long.valueOf((String) StpUtil.getLoginId()).equals(comment.getCommentUserId()))&&!StpUtil.hasPermission(deleteComment))
         {
             return "noPermission";
         }
