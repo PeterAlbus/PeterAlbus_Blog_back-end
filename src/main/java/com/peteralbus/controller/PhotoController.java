@@ -64,10 +64,10 @@ public class PhotoController
             try {
                 // 上传的文件被保存了
                 file.transferTo(dest);
-                Thumbnails.of("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName).size(200, 300).toFile("/home/PeterAlbus/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
+                Thumbnails.of("/home/PeterAlbus/assets/blog/imgs/photo/"+newName).size(200, 300).toFile("/home/PeterAlbus/assets/blog/imgs/photo/"+newName+"_THUMB.jpg");
                 Photo photo=new Photo();
-                photo.setImgSrc("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName);
-                photo.setImgThumb("https://file.peteralbus.com/assets/blog/imgs/photo/"+fileName+"_THUMB.jpg");
+                photo.setImgSrc("https://file.peteralbus.com/assets/blog/imgs/photo/"+newName);
+                photo.setImgThumb("https://file.peteralbus.com/assets/blog/imgs/photo/"+newName+"_THUMB.jpg");
                 photo.setImgName(imgName);
                 photoService.add(photo);
                 return "success";
@@ -109,7 +109,6 @@ public class PhotoController
                 Thumbnails.of(uploadPath+ saveName).size(300, 300).toFile(uploadPath+ saveName +"_THUMB.jpg");
                 return "https://file.peteralbus.com/assets/"+path+ saveName +"_THUMB.jpg";
             } catch (IOException e) {
-                e.printStackTrace();
                 return "error:"+e.getMessage();
             }
         }
@@ -138,7 +137,6 @@ public class PhotoController
                 file.transferTo(dest);
                 return "https://file.peteralbus.com/assets/"+path+fileName;
             } catch (IOException e) {
-                e.printStackTrace();
                 return "error:"+e.getMessage();
             }
         }
