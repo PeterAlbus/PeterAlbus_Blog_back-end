@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The type Type util.
+ * The Type util.
  * @author PeterAlbus
  * Created on 2022/3/26.
  */
@@ -36,7 +36,9 @@ public class TypeUtil
     {
         if(fileName!=null)
         {
-            return fileName.substring(fileName.lastIndexOf('.'));
+            String type = fileName.substring(fileName.lastIndexOf('.'));
+            if(!type.isEmpty())
+                return type;
         }
         return "unknown";
     }

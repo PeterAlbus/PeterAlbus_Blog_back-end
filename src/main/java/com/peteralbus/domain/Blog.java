@@ -15,15 +15,12 @@ import java.time.LocalDateTime;
 
 /**
  * The type Blog.
- *
- * @author PeterAlbus  Created on 2021/7/21.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Blog implements Serializable
-{
+public class Blog implements Serializable {
     /**
      * The Blog id.
      */
@@ -74,7 +71,6 @@ public class Blog implements Serializable
      * The Blog hide.
      */
     Boolean blogHide;
-
     /**
      * The Gmt modified.
      */

@@ -1,5 +1,6 @@
 package com.peteralbus.util;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
@@ -13,15 +14,10 @@ import java.util.concurrent.TimeUnit;
  * The type Redis utils.
  */
 @Component
-public class RedisUtils {
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class RedisUtil {
 
-    private RedisTemplate redisTemplate;
-
-    @Autowired
-    public void setRedisTemplate(RedisTemplate redisTemplate)
-    {
-        this.redisTemplate = redisTemplate;
-    }
+    final private RedisTemplate redisTemplate;
 
     /**
      * 写入缓存
@@ -47,7 +43,7 @@ public class RedisUtils {
      *
      * @param key        the key
      * @param value      the value
-     * @param expireTime the expire time
+     * @param expireTime the expiry time
      * @param timeUnit   the time unit
      * @return boolean
      */
@@ -82,7 +78,7 @@ public class RedisUtils {
      */
     public void removePattern(final String pattern) {
         Set<Serializable> keys = redisTemplate.keys(pattern);
-        if (keys.size() > 0){
+        if (!keys.isEmpty()){
             redisTemplate.delete(keys);
         }
     }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.peteralbus.domain.Comment;
 import com.peteralbus.mapper.CommentMapper;
 import com.peteralbus.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +16,10 @@ import java.util.List;
  * Created on 2022/3/28.
  */
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentServiceImpl implements CommentService
 {
-    CommentMapper commentMapper;
-
-    @Autowired
-    public void setCommentMapper(CommentMapper commentMapper)
-    {
-        this.commentMapper = commentMapper;
-    }
+    private final CommentMapper commentMapper;
 
     @Override
     public List<Comment> getCommentByBlogId(Long blogId)
