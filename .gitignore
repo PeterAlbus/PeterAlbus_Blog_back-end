@@ -31,10 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-
-/target/
-application.yml
-5963105_www.peteralbus.com.pfx
-SmsUtil.java
-/src/main/resources/8128048_www.peteralbus.com.pfx
+/src/main/java/com/peteralbus/util/SmsUtil.java
+/src/main/resources/application.yml
 /src/main/resources/www.peteralbus.com.pfx

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.peteralbus.domain.Blog;
 import com.peteralbus.mapper.BlogMapper;
 import com.peteralbus.service.BlogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,28 +18,22 @@ import java.util.List;
  * Created on 2021/7/21.
  */
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BlogServiceImpl implements BlogService
 {
-
-    private BlogMapper blogMapper;
-
-    /**
-     * Sets blog mapper.
-     *
-     * @param blogMapper the blog mapper
-     */
-    @Autowired
-    public void setBlogMapper(BlogMapper blogMapper)
-    {
-        this.blogMapper = blogMapper;
-    }
+    private final BlogMapper blogMapper;
 
     @Override
     public List<Blog> queryAll()
     {
         QueryWrapper<Blog> queryWrapper=new QueryWrapper<>();
         queryWrapper.ne("blog_hide",true);
-        return blogMapper.selectList(queryWrapper);
+        List<Blog> blogs = blogMapper.selectList(queryWrapper);
+        for (Blog blog : blogs)
+        {
+            blog.setBlogContent("");
+        }
+        return blogs;
     }
 
     @Override
