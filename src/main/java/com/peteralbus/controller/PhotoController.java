@@ -26,7 +26,7 @@ public class PhotoController {
 
     @RequestMapping("/upload")
     public Result<?> upload(@RequestParam("file") MultipartFile file, String imgName) {
-        Map<String,String> savedUrl = photoService.savePhoto(file, "blog/imgs/photo/", true);
+        Map<String,String> savedUrl = photoService.savePhoto(file, "blog/imgs/photo", true);
         if(savedUrl == null || savedUrl.get("url") == null || savedUrl.get("thumbnailUrl") == null) {
             return ResultUtil.error(500,"上传失败（上传或压缩失败），请联系管理员");
         }
