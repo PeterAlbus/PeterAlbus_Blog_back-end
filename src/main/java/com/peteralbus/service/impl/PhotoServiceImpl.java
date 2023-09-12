@@ -53,10 +53,10 @@ public class PhotoServiceImpl implements PhotoService
             File dest = new File(uploadPath + newName);
             try {
                 file.transferTo(dest);
-                urlMap.put("url", BASE_URL + savePath + newName);
+                urlMap.put("url", BASE_URL + savePath + "/" + newName);
                 if(isThumbnail) {
                     Thumbnails.of(dest).size(200, 300).toFile(uploadPath + newName + "_THUMB.jpg");
-                    urlMap.put("thumbnailUrl", BASE_URL + savePath + newName + "_THUMB.jpg");
+                    urlMap.put("thumbnailUrl", BASE_URL + savePath + "/" + newName + "_THUMB.jpg");
                 }
             } catch (Exception e) {
                 System.out.println("Img upload error:" + e.getMessage());
