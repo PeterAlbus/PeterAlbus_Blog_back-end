@@ -28,7 +28,7 @@ public class Message {
     Long targetId;
     String messageContent;
     String messageTitle;
-    String senderTime;
+    String senderName;
     Boolean isRead;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

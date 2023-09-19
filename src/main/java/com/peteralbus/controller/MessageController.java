@@ -18,10 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final MessageService messageService;
 
+    @RequestMapping("/getInBoxMessage")
+    public Result<?> getInBoxMessage() {
+        if (!StpUtil.isLogin()) {
+            return ResultUtil.error(403,"未登录");
+        }
+        Long userId = StpUtil.getLoginIdAsLong();
+        return ResultUtil.success(messageService.queryMessageByTargetId(userId));
+    }
+
+    @RequestMapping("/getOutBoxMessage")
+    public Result<?> getOutBoxMessage() {
+        if (!StpUtil.isLogin()) {
+            return ResultUtil.error(403,"未登录");
+        }
+        Long userId = StpUtil.getLoginIdAsLong();
+        return ResultUtil.success(messageService.queryMessageBySenderId(userId));
+    }
+
     @RequestMapping("/getUnreadMessageCount")
     public Result<?> getUnreadMessageCount() {
         if (!StpUtil.isLogin()) {
-            return ResultUtil.error(400,"未登录");
+            return ResultUtil.success(0,"未登录");
         }
         Long userId = StpUtil.getLoginIdAsLong();
         return ResultUtil.success(messageService.getUnreadMessageCount(userId));
