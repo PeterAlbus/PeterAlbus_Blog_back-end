@@ -24,7 +24,9 @@ public class Message {
     @TableId(type= IdType.ASSIGN_ID)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     Long messageId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     Long senderId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     Long targetId;
     String messageContent;
     String messageTitle;
