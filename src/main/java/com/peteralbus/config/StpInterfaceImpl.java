@@ -32,9 +32,11 @@ public class StpInterfaceImpl implements StpInterface {
             list.add(PermissionConfig.USER_MANAGEMENT);
             list.add(PermissionConfig.WRITE_ARTICLE);
             list.add(PermissionConfig.MODIFY_ARTICLE);
+            list.add(PermissionConfig.DELETE_IMAGE);
         }
         if (user.getUserIdentity() <= 1) {
             list.add(PermissionConfig.DELETE_COMMENT);
+            list.add(PermissionConfig.DELETE_IMAGE);
         }
         if (user.getUserIdentity() <= 5) {
             list.add(PermissionConfig.COMMENT);
