@@ -1,8 +1,10 @@
 package com.peteralbus.service.impl;
 
 import com.peteralbus.domain.Photo;
+import com.peteralbus.domain.Result;
 import com.peteralbus.mapper.PhotoMapper;
 import com.peteralbus.service.PhotoService;
+import com.peteralbus.util.ResultUtil;
 import com.peteralbus.util.TypeUtil;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
@@ -35,6 +37,11 @@ public class PhotoServiceImpl implements PhotoService
     }
 
     @Override
+    public Photo queryById(Long id) {
+        return photoMapper.selectById(id);
+    }
+
+    @Override
     public int add(Photo photo)
     {
         return photoMapper.insert(photo);
@@ -63,5 +70,34 @@ public class PhotoServiceImpl implements PhotoService
             }
         }
         return urlMap;
+    }
+
+    @Override
+    public Result<?> deletePhotoByUrl(String photoUrl) {
+        if(!photoUrl.startsWith(BASE_URL)) {
+            return ResultUtil.error(400,"Not a deletable photo.");
+        }
+        String photoPath = photoUrl.replace(BASE_URL, BASE_PATH);
+        File file = new File(photoPath);
+        File thumbFile = new File(photoPath + "_THUMB.jpg");
+        if(file.exists()) {
+            boolean result = file.delete();
+            if(!result) {
+                return ResultUtil.error(500,"Unknown file system error.");
+            }
+            if(thumbFile.exists()) {
+                boolean thumbResult = thumbFile.delete();
+                if(!thumbResult) {
+                    return ResultUtil.success(null, "Delete success, but thumbnail delete failed.");
+                }
+            }
+            return ResultUtil.success(null, "Delete success.");
+        }
+        return ResultUtil.error(400,"File not exists.");
+    }
+
+    @Override
+    public int deletePhotoById(Long photoId) {
+        return photoMapper.deleteById(photoId);
     }
 }

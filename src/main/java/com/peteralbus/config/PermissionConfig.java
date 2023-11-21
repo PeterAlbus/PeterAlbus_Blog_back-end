@@ -7,6 +7,7 @@ public class PermissionConfig {
     public static final String MODIFY_ARTICLE = "modify-article";
     public static final String DELETE_COMMENT = "delete-comment";
     public static final String COMMENT = "comment";
+    public static final String DELETE_IMAGE = "delete-image";
 
     public static final String ROLE_OWNER = "owner";
     public static final String ROLE_ADMIN = "admin";
