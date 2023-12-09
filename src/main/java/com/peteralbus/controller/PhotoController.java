@@ -49,7 +49,7 @@ public class PhotoController {
     @PostMapping("/uploadOriginImg")
     public Result<?> uploadOriginImg(@RequestParam("file") MultipartFile file, String path) {
         /*pathExample:blog/imgs/photo/*/
-        // 文件大于1GB不允许上传
+        // 文件大于0.5GB不允许上传
         if(file.getSize() > 1024 * 1024 * 512) {
             return ResultUtil.error(500,"上传失败，文件大小超过512MB");
         }
