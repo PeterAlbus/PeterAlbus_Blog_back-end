@@ -27,8 +27,8 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PhotoServiceImpl implements PhotoService
 {
-    static final String BASE_PATH = "/home/PeterAlbus/assets/";
-    static final String BASE_URL = "https://file.peteralbus.com/assets/";
+    public static final String BASE_PATH = "/home/PeterAlbus/assets/";
+    public static final String BASE_URL = "https://file.peteralbus.com/assets/";
     private final PhotoMapper photoMapper;
     @Override
     public List<Photo> queryAll()
