@@ -115,7 +115,7 @@ public class UserController {
         String verifyCode = RandomUtil.generateVerifyCode(4);
         try {
             result = SmsUtil.sendSms(account, verifyCode);
-            if (result.equals("sendSmsSuccess")) {
+            if (result.equals("smsSendSuccess")) {
                 redisUtil.set("verifyCode:" + account, verifyCode, 10L, TimeUnit.MINUTES);
                 return ResultUtil.success(null);
             }
@@ -147,7 +147,7 @@ public class UserController {
             }
             else {
                 String result = SmsUtil.sendSms(account, verifyCode);
-                if (!result.equals("sendSmsSuccess")) {
+                if (!result.equals("smsSendSuccess")) {
                     return ResultUtil.error(500, "短信发送失败，请检查手机号或联系管理员");
                 }
             }
@@ -159,7 +159,7 @@ public class UserController {
             System.out.println("发送邮件失败：" + e.getMessage());
             return ResultUtil.error(500, "邮件发送失败");
         }
-        redisUtil.set("verifyCode:" + account, verifyCode, 10L, TimeUnit.MINUTES);
+        redisUtil.set("verifyCode_reset:" + account, verifyCode, 10L, TimeUnit.MINUTES);
         return ResultUtil.success(null);
     }
 
